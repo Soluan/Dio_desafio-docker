@@ -1,0 +1,30 @@
+httpd:
+  server_name: desafioDio.com
+  server_root: /var/www/html
+
+  listen_ports:
+    - 80
+    - 443
+
+  document_root: "{{ httpd.server_root }}/public_html"
+
+  virtual_hosts:
+    - server_name: exemplo.com
+      document_root: "{{ httpd.document_root }}"
+      options: FollowSymLinks
+      allow_override: All
+      log_file: /var/log/httpd/exemplo.com-access.log
+
+  directories:
+    - directory_path: "{{ httpd.document_root }}"
+      options: Indexes FollowSymLinks
+      allow_override: None
+      require: all granted
+
+  ssl:
+    enable: true
+    certificate_file: /etc/ssl/certs/exemplo.com.crt
+    certificate_key_file: /etc/ssl/private/exemplo.com.key
+    ca_certificate_file: /etc/ssl/certs/ca.crt
+
+  error_log: /var/log/httpd/error.log
